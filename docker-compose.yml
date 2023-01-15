@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:latest
+    restart: on-failure
+    ports:
+      - 6379:6379
+    container_name: redis
+
+  back_end:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000 --settings=kata_kuti.settings.dockerise
+    container_name: back_end
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/webshocket/app
+    depends_on:
+      - redis
